@@ -8,23 +8,23 @@ class MarkovChain(object):
         Parameters
         ----------
         transition_matrix: 2-D array
-            A 2-D array representing the probabilities of change of 
+            A 2-D array representing the probabilities of change of
             state in the Markov Chain.
 
-        states: 1-D array 
+        states: 1-D array
             An array representing the states of the Markov Chain. It
             needs to be in the same order as transition_matrix.
         """
         self.transition_matrix = np.atleast_2d(transition_matrix)
         self.states = states
-        self.index_dict = {self.states[index]: index for index in 
+        self.index_dict = {self.states[index]: index for index in
                            range(len(self.states))}
         self.state_dict = {index: self.states[index] for index in
                            range(len(self.states))}
 
     def next_state(self, current_state):
         """
-        Returns the state of the random variable at the next time 
+        Returns the state of the random variable at the next time
         instance.
 
         Parameters
@@ -32,9 +32,9 @@ class MarkovChain(object):
         current_state: str
             The current state of the system.
         """
-        return self.state_dict[np.random.choice(
-            self.states, 
-            p=self.transition_matrix[self.index_dict[current_state], :])]
+        return np.random.choice(
+            self.states,
+            p=self.transition_matrix[self.index_dict[current_state], :])
 
     def generate_states(self, current_state, no=10):
         """
