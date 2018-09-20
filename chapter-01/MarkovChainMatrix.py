@@ -62,18 +62,17 @@ class MarkovChain(object):
         Parameters
         ----------
         i_state: str
-	    The state from which the accessibility needs to be checked.
-        
+            The state from which the accessibility needs to be checked.
+
         f_state: str
-	    The state to which accessibility needs to be checked.
+            The state to which accessibility needs to be checked.
         """
-        reachable_states = [i_state]
+        reachable_states = [self.index_dict[i_state]]
         for state in reachable_states:
-	    if state == self.index_dict[f_state]:
-	        return True
-	    else:
-	        reachable_states.append(np.nonzero(
-	          self.transition_matrix[self.index_dict[i_state], :])[0])
+            if state == self.index_dict[f_state]:
+                return True
+            else:
+                reachable_states.extend(np.nonzero(self.transition_matrix[state, :])[0])
         return False
 
     def is_irreducible(self):
