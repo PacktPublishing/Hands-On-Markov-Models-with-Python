@@ -76,7 +76,7 @@ he is busy co-founding a start-up. He has contributed to books on probabilistic 
 models by Packt Publishing.
 
 
-## Other books by the authors
+## Other book by the authors
 * [Mastering Probabilistic Graphical Models Using Python](https://www.packtpub.com/big-data-and-business-intelligence/mastering-probabilistic-graphical-models-using-python?utm_source=github&utm_medium=repository&utm_campaign=9781784394684)
 
 ### Suggestions and Feedback
