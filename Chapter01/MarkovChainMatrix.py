@@ -55,7 +55,7 @@ class MarkovChain(object):
             current_state = next_state
         return future_states
 
-    def is_accessible(self, i_state, f_state):
+    def is_accessible(self, i_state, f_state, check_up_to_depth=1000):
         """
         Check if state f_state is accessible from i_state.
 
@@ -67,19 +67,23 @@ class MarkovChain(object):
         f_state: str
             The state to which accessibility needs to be checked.
         """
+        counter = 0
         reachable_states = [self.index_dict[i_state]]
         for state in reachable_states:
+            if counter == check_up_to_depth:
+                break
             if state == self.index_dict[f_state]:
                 return True
             else:
                 reachable_states.extend(np.nonzero(self.transition_matrix[state, :])[0])
+            counter = counter + 1
         return False
 
     def is_irreducible(self):
         """
         Check if the Markov Chain is irreducible.
         """
-        for (i, j) in combinations(self.states, self.states):
+        for (i, j) in combinations(self.states, 2):
             if not self.is_accessible(i, j):
                 return False
         return True
