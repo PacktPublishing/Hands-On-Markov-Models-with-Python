@@ -1,4 +1,8 @@
+from itertools import combinations
+from math import gcd
+from functools import reduce
 import numpy as np
+
 
 class MarkovChain(object):
     def __init__(self, transition_matrix, states):
@@ -22,6 +26,7 @@ class MarkovChain(object):
         self.state_dict = {index: self.states[index] for index in
                            range(len(self.states))}
 
+
     def next_state(self, current_state):
         """
         Returns the state of the random variable at the next time
@@ -35,6 +40,7 @@ class MarkovChain(object):
         return np.random.choice(
             self.states,
             p=self.transition_matrix[self.index_dict[current_state], :])
+
 
     def generate_states(self, current_state, no=10):
         """
@@ -54,6 +60,7 @@ class MarkovChain(object):
             future_states.append(next_state)
             current_state = next_state
         return future_states
+
 
     def is_accessible(self, i_state, f_state, check_up_to_depth=1000):
         """
@@ -79,6 +86,7 @@ class MarkovChain(object):
             counter = counter + 1
         return False
 
+
     def is_irreducible(self):
         """
         Check if the Markov Chain is irreducible.
@@ -88,7 +96,8 @@ class MarkovChain(object):
                 return False
         return True
 
-    def get_period(self, state):
+
+    def get_period(self, state, max_number_stps = 50, max_number_trls = 100):
         """
         Returns the period of the state in the Markov Chain.
 
@@ -97,7 +106,23 @@ class MarkovChain(object):
         state: str
             The state for which the period needs to be computed.
         """
-        return gcd([len(i) for i in all_possible_paths])
+        initial_state = state
+        max_number_steps = max_number_stps
+        max_number_trials = max_number_trls
+        periodic_lengths = []
+        a= []
+
+        for i in range(1, max_number_steps+1):
+            for j in range(max_number_trials):
+                last_states_chain = self.generate_states(current_state=initial_state, no=i)[-1]
+                if last_states_chain == initial_state:
+                    periodic_lengths.append(i)
+                    break
+        
+        if len(periodic_lengths) >0:
+            a = reduce(gcd, periodic_lengths)
+            return a
+
 
     def is_aperiodic(self):
         """
@@ -109,6 +134,7 @@ class MarkovChain(object):
                 return False
         return True
 
+
     def is_transient(self, state):
         """
         Checks if a state is transient or not.
@@ -118,20 +144,23 @@ class MarkovChain(object):
         state: str
             The state for which the transient property needs to be checked.
         """
-        if all(self.transition_matrix[~self.index_dict[state], self.index_dict[state]] == 0):
+        if np.all(self.transition_matrix[~self.index_dict[state], self.index_dict[state]] == 0):
             return True
         else:
             return False
 
     def is_absorbing(self, state):
-     """
-     Checks if the given state is absorbing.
+        """
+        Checks if the given state is absorbing.
 
-     Parameters
-     ----------
-     state: str
-     The state for which we need to check whether it's absorbing
-     or not.
-     """
-     state_index = self.index_dict[state]
-     if self.transition_matrix[state_index, state_index]
+        Parameters
+        ----------
+        state: str
+        The state for which we need to check whether it's absorbing
+        or not.
+        """
+        state_index = self.index_dict[state]
+        if self.transition_matrix[state_index, state_index] == 1:
+            return True
+        else:
+            return False
