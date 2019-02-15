@@ -1,6 +1,7 @@
-from itertools import combinations
 from math import gcd
+from itertools import combinations
 from functools import reduce
+
 import numpy as np
 
 
@@ -118,7 +119,7 @@ class MarkovChain(object):
                 if last_states_chain == initial_state:
                     periodic_lengths.append(i)
                     break
-        
+
         if len(periodic_lengths) >0:
             a = reduce(gcd, periodic_lengths)
             return a
@@ -126,7 +127,7 @@ class MarkovChain(object):
 
     def is_aperiodic(self):
         """
-        Checks if the Markov Chain is aperiodic. 
+        Checks if the Markov Chain is aperiodic.
         """
         periods = [self.get_period(state) for state in self.states]
         for period in periods:
